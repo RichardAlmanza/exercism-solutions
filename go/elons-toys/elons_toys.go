@@ -21,7 +21,7 @@ func (car Car) DisplayBattery() string {
 	return fmt.Sprintf("Battery at %d%%",car.battery)
 }
 
-// CanFinish method
+// CanFinish method return if the car can complete the race.
 func (car Car) CanFinish(trackDistance int) bool {
 	var maxDistance int =  car.speed * car.battery / car.batteryDrain
 
