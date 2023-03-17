@@ -71,11 +71,9 @@ func TotalByPeriod(in []Record, p DaysPeriod) float64 {
 func CategoryExpenses(in []Record, p DaysPeriod, c string) (float64, error) {
 	var sum float64
 	var err error
-	recordsByPeriodByCategory := Filter(Filter(in, ByDaysPeriod(p)), ByCategory(c))
+	recordsByCategory := Filter(in, ByCategory(c))
 
-	for _, record := range recordsByPeriodByCategory {
-		sum += record.Amount
-	}
+	sum = TotalByPeriod(recordsByCategory, p)
 
 	if len(Filter(in, ByCategory(c))) == 0 {
 		sum = 0.0
