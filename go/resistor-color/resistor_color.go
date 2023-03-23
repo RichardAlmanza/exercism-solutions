@@ -2,10 +2,27 @@ package resistorcolor
 
 // Colors should return the list of all colors.
 func Colors() []string {
-	panic("Please implement the Colors function")
+	return []string{
+		"black",
+		"brown",
+		"red",
+		"orange",
+		"yellow",
+		"green",
+		"blue",
+		"violet",
+		"grey",
+		"white",
+	}
 }
 
 // ColorCode returns the resistance value of the given color.
 func ColorCode(color string) int {
-	panic("Please implement the ColorCode function")
+	for index, value := range Colors() {
+		if value == color {
+			return index
+		}
+	}
+
+	return -1
 }
