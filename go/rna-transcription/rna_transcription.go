@@ -2,20 +2,21 @@ package strand
 
 import "strings"
 
-type translation map[rune]rune
+type transcription map[rune]byte
 
-var dnaToRna = translation{
+var dnaToRna = transcription{
 	'G': 'C',
 	'C': 'G',
 	'T': 'A',
 	'A': 'U',
 }
 
+// ToRNA transcripts DNA to RNA
 func ToRNA(dna string) string {
 	var newRna strings.Builder
 
 	for _, nucleotide := range dna {
-		newRna.WriteRune(dnaToRna[nucleotide])
+		newRna.WriteByte(dnaToRna[nucleotide])
 	}
 
 	return newRna.String()
