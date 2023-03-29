@@ -1,23 +1,28 @@
 package pangram
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 type alphabet map[rune]uint8
 
-const englishAlphabet string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const EnglishAlphabet string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+// NewAlphabet returns an alphabet (map[rune]uint8) based on sAlphabet (string)
 func NewAlphabet(sAlphabet string) alphabet {
-	var english alphabet = make(alphabet, len(sAlphabet))
+	var newAlpha alphabet = make(alphabet, utf8.RuneCountInString(sAlphabet))
 
 	for _, runeKey := range sAlphabet {
-		english[runeKey] = 0
+		newAlpha[runeKey] = 0
 	}
 
-	return english
+	return newAlpha
 }
 
+// IsPangram verifies if input is a pangram
 func IsPangram(input string) bool {
-	var counter alphabet = NewAlphabet(englishAlphabet)
+	var counter alphabet = NewAlphabet(EnglishAlphabet)
 
 	input = strings.ToUpper(input)
 
