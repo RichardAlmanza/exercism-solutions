@@ -2,7 +2,6 @@ package grains
 
 import (
 	"errors"
-	"math"
 )
 
 func Square(number int) (uint64, error) {
@@ -14,10 +13,13 @@ func Square(number int) (uint64, error) {
 		return 0, errors.New("there are no more than 64 squares")
 	}
 
-	return uint64(math.Pow(2, float64(number - 1))), nil
+	// I saw the solution from paulwilljones. the solution reminded me
+	// that Go can interact directly with bits and bytes using bitwise operations.
+	// The magic of a better performance based on most low basic structure
+	return 1 << (number - 1), nil
 }
 
 func Total() uint64 {
 	totalGrains, _ := Square(64)
-	return totalGrains * 2 - 1
+	return totalGrains << 1 - 1
 }
