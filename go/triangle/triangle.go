@@ -1,28 +1,71 @@
-// This is a "stub" file.  It's a little start on your solution.
-// It's not a complete solution though; you have to write some code.
-
-// Package triangle should have a package comment that summarizes what it's about.
-// https://golang.org/doc/effective_go.html#commentary
 package triangle
 
-
-// Notice KindFromSides() returns this type. Pick a suitable data type.
-type Kind
+type Kind int
 
 const (
-    // Pick values for the following identifiers used by the test program.
-    NaT // not a triangle
-    Equ // equilateral
-    Iso // isosceles
-    Sca // scalene
+    NaT = iota  // not a triangle
+    Equ         // equilateral
+    Iso         // isosceles
+    Sca         // scalene
 )
 
-// KindFromSides should have a comment documenting it.
+func checkTriangle(sides [3]float64) bool {
+	var maxSideIndex int
+	var sum float64
+
+	for index, side := range sides {
+		if side <= 0 {
+			return false
+		}
+
+		if side > sides[maxSideIndex] {
+			maxSideIndex = index
+		}
+
+		sum += side
+	}
+
+	sum -= 2 * sides[maxSideIndex]
+
+	return 0 <= sum
+}
+
+func countEqualSides(sides [3]float64) uint8 {
+	var counter uint8
+
+	for index, sideA := range sides {
+		sideB := sides[(index + 1) % 3]
+
+		if sideA == sideB {
+			counter++
+		}
+	}
+
+	return counter
+}
+
+func newKind(sides [3]float64) Kind {
+	var triangle Kind
+
+	if !checkTriangle(sides) {
+		return NaT
+	}
+
+	switch countEqualSides(sides) {
+	case 0:
+		triangle = Sca
+	case 1:
+		triangle = Iso
+	case 2:
+		panic("Witchcraft!")
+	case 3:
+		triangle = Equ
+	}
+
+	return triangle
+}
+
+// KindFromSides returns the triangle kind based on its sides.
 func KindFromSides(a, b, c float64) Kind {
-	// Write some code here to pass the test suite.
-	// Then remove all the stock comments.
-	// They're here to help you get started but they only clutter a finished solution.
-	// If you leave them in, reviewers may protest!
-	var k Kind
-	return k
+	return newKind([3]float64{a, b, c})
 }
