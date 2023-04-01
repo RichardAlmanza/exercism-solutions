@@ -1,15 +1,22 @@
-// This is a "stub" file.  It's a little start on your solution.
-// It's not a complete solution though; you have to write some code.
-
-// Package proverb should have a package comment that summarizes what it's about.
-// https://golang.org/doc/effective_go.html#commentary
 package proverb
 
-// Proverb should have a comment documenting it.
+import "fmt"
+
+const proverbFormat = "For want of a %s the %s was lost."
+
+// Proverb return proverb []string with the items in rhyme
 func Proverb(rhyme []string) []string {
-	// Write some code here to pass the test suite.
-	// Then remove all the stock comments.
-	// They're here to help you get started but they only clutter a finished solution.
-	// If you leave them in, reviewers may protest!
-	panic("Please implement the Proverb function")
+	if len(rhyme) == 0 {
+		return []string{}
+	}
+
+	var proverb []string = make([]string, 0, len(rhyme))
+
+	for previousIndex, item := range rhyme[1:] {
+		proverb = append(proverb, fmt.Sprintf(proverbFormat, rhyme[previousIndex], item))
+	}
+
+	proverb = append(proverb, fmt.Sprintf("And all for the want of a %s.", rhyme[0]))
+
+	return proverb
 }
