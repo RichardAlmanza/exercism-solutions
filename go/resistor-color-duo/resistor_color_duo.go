@@ -21,6 +21,7 @@ func Value(colors []string) int {
 	for _, color := range colors[:2] {
 		value *= multiplier
 		value += int(colorCodes[color])
+		
 		multiplier *= 10
 	}
 
