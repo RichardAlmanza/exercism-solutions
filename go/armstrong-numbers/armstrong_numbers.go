@@ -1,7 +1,5 @@
 package armstrong
 
-import "math"
-
 func countDigits(n int) int {
 	var counter int = 1
 
@@ -14,21 +12,21 @@ func countDigits(n int) int {
 }
 
 func powInt(base, exponent int) int {
-	return int(
-		math.Pow(
-			float64(base), float64(exponent),
-		),
-	)
+	var pow int = 1
+
+	for i := 0; i < exponent; i++ {
+		pow *= base
+	}
+
+	return pow
 }
 
 func IsNumber(n int) bool {
 	var checkSum int
-	var tempN int = n
 	var nDigits int = countDigits(n)
 
-	for i := 0; i < nDigits; i++ {
-		checkSum += powInt(tempN % 10, nDigits)
-		tempN /= 10
+	for i := n; i > 0; i /= 10 {
+		checkSum += powInt(i % 10, nDigits)
 	}
 
 	return checkSum == n
