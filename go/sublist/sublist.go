@@ -20,16 +20,11 @@ func isSubList(l1, l2 []int) bool {
 		return true
 	}
 
-loopL1:
 	for i := 0; i < len(l1); i++ {
 		if l1[i] == l2[0] {
-			for j := 0; j < len(l2); j++ {
-				if l1[i + j] != l2[j] {
-					continue loopL1
-				}
+			if areEqual(l1[i:i+len(l2)], l2) == RelationEqual {
+				return true
 			}
-
-			return true
 		}
 	}
 
