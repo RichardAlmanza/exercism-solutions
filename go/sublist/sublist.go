@@ -43,12 +43,11 @@ func aRelationB(l1, l2 []int, relationAB Relation, comparator listComparator) Re
 
 func Sublist(l1, l2 []int) Relation {
 	var result Relation
-	var lenDifference int = len(l1) - len(l2)
 
 	switch {
-	case lenDifference == 0:
+	case len(l1) == len(l2):
 		result = aRelationB(l1, l2, RelationEqual, areEqual)
-	case lenDifference < 0:
+	case len(l1) < len(l2):
 		result = aRelationB(l2, l1, RelationSublist, isSubList)
 	default:
 		result = aRelationB(l1, l2, RelationSuperlist, isSubList)
