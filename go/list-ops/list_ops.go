@@ -4,33 +4,98 @@ package listops
 type IntList []int
 
 func (s IntList) Foldl(fn func(int, int) int, initial int) int {
-	panic("Please implement the Foldl function")
+	var sLen int = s.Length()
+
+	for i := 0; i < sLen; i++ {
+		initial = fn(initial, s[i])
+	}
+
+	return initial
 }
 
 func (s IntList) Foldr(fn func(int, int) int, initial int) int {
-	panic("Please implement the Foldr function")
+	var sLen int = s.Length()
+
+	for i := sLen - 1; i > -1; i-- {
+		initial = fn(s[i], initial)
+	}
+
+	return initial
 }
 
 func (s IntList) Filter(fn func(int) bool) IntList {
-	panic("Please implement the Filter function")
+	var counter int
+	var filtered IntList
+	var newList IntList = make(IntList, s.Length())
+
+	for _, value := range s {
+		if fn(value) {
+			newList[counter] = value
+			counter++
+		}
+	}
+
+	filtered = make(IntList, counter)
+
+	for i := 0; i < counter; i++ {
+		filtered[i] = newList[i]
+	}
+
+	return filtered
 }
 
 func (s IntList) Length() int {
-	panic("Please implement the Length function")
+	var counter int
+
+	for range s {
+		counter++
+	}
+
+	return counter
 }
 
 func (s IntList) Map(fn func(int) int) IntList {
-	panic("Please implement the Map function")
+	var newList IntList = make(IntList, s.Length())
+
+	for i, value := range s {
+		newList[i] = fn(value)
+	}
+
+	return newList
 }
 
 func (s IntList) Reverse() IntList {
-	panic("Please implement the Reverse function")
+	var sLen int = s.Length()
+	var newList IntList = make(IntList, sLen)
+
+	for i := 0; i < sLen; i++ {
+		newList[i] = s[sLen - 1 - i]
+	}
+
+	return newList
 }
 
 func (s IntList) Append(lst IntList) IntList {
-	panic("Please implement the Append function")
+	var sLen int = s.Length()
+	var lstLen int = lst.Length()
+	var newListLen int = sLen + lstLen
+	var newList IntList = make(IntList, newListLen)
+
+	for i, value := range s {
+		newList[i] = value
+	}
+
+	for i, value := range lst {
+		newList[sLen + i] = value
+	}
+
+	return newList
 }
 
 func (s IntList) Concat(lists []IntList) IntList {
-	panic("Please implement the Concat function")
+	for _, list := range lists {
+		s = s.Append(list)
+	}
+
+	return s
 }
