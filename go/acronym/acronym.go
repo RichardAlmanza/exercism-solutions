@@ -1,15 +1,32 @@
-// This is a "stub" file.  It's a little start on your solution.
-// It's not a complete solution though; you have to write some code.
-
-// Package acronym should have a package comment that summarizes what it's about.
-// https://golang.org/doc/effective_go.html#commentary
 package acronym
 
-// Abbreviate should have a comment documenting it.
+import (
+	"strings"
+	"unicode"
+)
+
+func isSpace(char rune) bool {
+	switch char {
+	case ' ', '-', '_':
+		return true
+	}
+
+	return false
+}
+
+// Abbreviate return the acronym for input s
 func Abbreviate(s string) string {
-	// Write some code here to pass the test suite.
-	// Then remove all the stock comments.
-	// They're here to help you get started but they only clutter a finished solution.
-	// If you leave them in, reviewers may protest!
-	return ""
+	var previousIsSpace bool = true
+	var acronym strings.Builder
+
+	for _, char := range s {
+		if previousIsSpace && !isSpace(char){
+			acronym.WriteRune(unicode.ToUpper(char))
+			previousIsSpace = false
+		} else {
+			previousIsSpace = isSpace(char)
+		}
+	}
+
+	return acronym.String()
 }
