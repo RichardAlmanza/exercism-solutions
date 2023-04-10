@@ -2,16 +2,18 @@ package sublist
 
 // Relation type is defined in relations.go file.
 
-func areEqual(l1, l2 []int) Relation {
+type listComparator func(a,b []int)bool
+
+func areEqual(l1, l2 []int) bool {
 	for i, v1 := range l1 {
 		v2 := l2[i]
 
 		if v1 != v2 {
-			return RelationUnequal
+			return false
 		}
 	}
 
-	return RelationEqual
+	return true
 }
 
 func isSubList(l1, l2 []int) bool {
@@ -22,7 +24,7 @@ func isSubList(l1, l2 []int) bool {
 
 	for i := 0; i < len(l1); i++ {
 		if l1[i] == l2[0] {
-			if areEqual(l1[i:i+len(l2)], l2) == RelationEqual {
+			if areEqual(l1[i:i+len(l2)], l2) {
 				return true
 			}
 		}
@@ -31,8 +33,8 @@ func isSubList(l1, l2 []int) bool {
 	return false
 }
 
-func aRelationB(l1, l2 []int, relationAB Relation) Relation {
-	if isSubList(l1, l2) {
+func aRelationB(l1, l2 []int, relationAB Relation, comparator listComparator) Relation {
+	if comparator(l1, l2) {
 		return relationAB
 	}
 
@@ -45,11 +47,11 @@ func Sublist(l1, l2 []int) Relation {
 
 	switch {
 	case lenDifference == 0:
-		result = areEqual(l1, l2)
+		result = aRelationB(l1, l2, RelationEqual, areEqual)
 	case lenDifference < 0:
-		result = aRelationB(l2, l1, RelationSublist)
+		result = aRelationB(l2, l1, RelationSublist, isSubList)
 	default:
-		result = aRelationB(l1, l2, RelationSuperlist)
+		result = aRelationB(l1, l2, RelationSuperlist, isSubList)
 	}
 
 	return result
