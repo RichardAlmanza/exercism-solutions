@@ -20,12 +20,13 @@ func Abbreviate(s string) string {
 	var acronym strings.Builder
 
 	for _, char := range s {
-		if previousIsSpace && !isSpace(char){
+		isCharSpace := isSpace(char)
+
+		if previousIsSpace && !isCharSpace {
 			acronym.WriteRune(unicode.ToUpper(char))
-			previousIsSpace = false
-		} else {
-			previousIsSpace = isSpace(char)
 		}
+
+		previousIsSpace = isCharSpace
 	}
 
 	return acronym.String()
