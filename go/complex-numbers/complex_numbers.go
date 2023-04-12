@@ -1,43 +1,68 @@
 package complexnumbers
 
+import "math"
+
 // Define the Number type here.
 
+type Number struct {
+	a float64
+	b float64
+}
+
 func (n Number) Real() float64 {
-	panic("Please implement the Real method")
+	return n.a
 }
 
 func (n Number) Imaginary() float64 {
-	panic("Please implement the Imaginary method")
+	return n.b
 }
 
 func (n1 Number) Add(n2 Number) Number {
-	panic("Please implement the Add method")
+	return Number{n1.a + n2.a, n1.b + n2.b}
 }
 
 func (n1 Number) Subtract(n2 Number) Number {
-	panic("Please implement the Subtract method")
+	return Number{n1.a - n2.a, n1.b - n2.b}
 }
 
 func (n1 Number) Multiply(n2 Number) Number {
-	panic("Please implement the Multiply method")
+	var newReal float64
+	var newImaginary float64
+
+	a, b, c, d := n1.a, n1.b, n2.a, n2.b
+
+	newReal = a * c - b * d
+	newImaginary = b * c + a * d
+
+	return Number{newReal, newImaginary}
 }
 
 func (n Number) Times(factor float64) Number {
-	panic("Please implement the Times method")
+	return Number{n.a * factor, n.b * factor}
 }
 
 func (n1 Number) Divide(n2 Number) Number {
-	panic("Please implement the Divide method")
+	var newReal float64
+	var newImaginary float64
+	var denominator float64
+
+	a, b, c, d := n1.a, n1.b, n2.a, n2.b
+
+	denominator = c * c + d * d
+	newReal = (a * c + b * d) / denominator
+	newImaginary = (b * c - a * d) / denominator
+
+	return Number{newReal, newImaginary}
 }
 
 func (n Number) Conjugate() Number {
-	panic("Please implement the Conjugate method")
+	return Number{n.a, -n.b}
 }
 
 func (n Number) Abs() float64 {
-	panic("Please implement the Abs method")
+	return math.Sqrt(n.a * n.a + n.b * n.b)
 }
 
 func (n Number) Exp() Number {
-	panic("Please implement the Exp method")
+	return Number{math.Cos(n.b), math.Sin(n.b)}.Times(math.Pow(math.E, n.a))
 }
