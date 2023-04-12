@@ -1,49 +1,56 @@
 package wordy
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
+)
+
+const (
+	regexQuestion string = `^What is ((-?\d+)( (plus|minus|multiplied by|divided by) (-?\d+))*)\?$`
 )
 
 var (
-	reOperationStructure *regexp.Regexp
-	reQuestionStructure *regexp.Regexp
+	reQuestionStructure *regexp.Regexp = regexp.MustCompile(regexQuestion)
 
-	operations map[string]func(int, int)int
-)
-
-func init() {
-	const regexNumber string = `(-?\d+)`
-	const regexOperation string = `(plus|minus|multiplied by|divided by) %s`
-	const regexQuestion string = `^What is %s( %s)*\?$`
-
-	var reOperation string = fmt.Sprintf(regexOperation, regexNumber)
-	var reQuestion string = fmt.Sprintf(regexQuestion, regexNumber, reOperation)
-
-	reOperationStructure = regexp.MustCompile(reOperation)
-	reQuestionStructure = regexp.MustCompile(reQuestion)
-
-	operations = map[string]func(int, int)int{
+	operations map[string]func(int, int)int = map[string]func(int, int)int{
 		"plus": func(a, b int) int {return a + b},
 		"minus": func(a, b int) int {return a - b},
-		"multiplied by": func(a, b int) int {return a * b},
-		"divided by": func(a, b int) int {return a / b},
+		"multiplied": func(a, b int) int {return a * b},
+		"divided": func(a, b int) int {return a / b},
 	}
-}
+)
 
 func Answer(question string) (int, bool) {
 	if !reQuestionStructure.MatchString(question) {
 		return 0, false
 	}
 
-	base, _ := strconv.Atoi(reQuestionStructure.FindStringSubmatch(question)[1])
+	var counter int
+	var number int
+	var operation string
+	var toOperate []string = strings.Fields(reQuestionStructure.FindStringSubmatch(question)[1])
 
-	for _, re := range reOperationStructure.FindAllStringSubmatch(question, -1) {
-		operation := re[1]
-		number, _ := strconv.Atoi(re[2])
+	base, _ := strconv.Atoi(toOperate[0])
 
-		base = operations[operation](base, number)
+	for _, element := range toOperate[1:] {
+		if element == "by" {
+			continue
+		}
+
+		switch counter {
+		case 0:
+			operation = element
+		case 1:
+			number, _ = strconv.Atoi(element)
+		}
+
+		counter++
+
+		if counter == 2 {
+			base = operations[operation](base, number)
+			counter = 0
+		}
 	}
 
 	return base, true
