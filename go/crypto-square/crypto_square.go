@@ -1,40 +1,37 @@
 package cryptosquare
 
 import (
-	"fmt"
 	"math"
 	"strings"
 )
 
 func isCharValid(char rune) bool {
-	if 'a' <= char && char <= 'z' {
-		return true
-	}
-
-	if '0' <= char && char <= '9' {
+	switch {
+	case 'a' <= char && char <= 'z',
+		'0' <= char && char <= '9':
 		return true
 	}
 
 	return false
 }
 
-func normalize(input string) string {
+func normalizer(char rune) rune {
 	const diffAa rune = 'A' - 'a'
-	var output strings.Builder
 
-	for _, char := range input {
-		if 'A' <= char && char <= 'Z' {
-			char -= diffAa
-		}
-
-		if !isCharValid(char) {
-			continue
-		}
-
-		output.WriteRune(char)
+	switch {
+	case isCharValid(char):
+		break
+	case 'A' <= char && char <= 'Z':
+		char -= diffAa
+	default:
+		char = -1
 	}
 
-	return output.String()
+	return char
+}
+
+func normalize(input string) string {
+	return strings.Map(normalizer, input)
 }
 
 func calculatesRowsAndColumns(length int) (int, int) {
@@ -51,18 +48,14 @@ func calculatesRowsAndColumns(length int) (int, int) {
 func squareText(input string, rows, cols int) string {
 	var output strings.Builder
 	var pad string
+	var width int = rows*cols - len(input)
 
-	for i := 0; i < rows; i++ {
-		start := i * cols
-		finish := start + cols
-
-		if finish > len(input) {
-			pad = strings.Repeat(" ", finish - len(input))
-			finish = len(input)
-		}
-
-		output.WriteString(fmt.Sprintf("%s%s", input[start: finish], pad))
+	if width > 0 {
+		pad = strings.Repeat(" ", width)
 	}
+
+	output.WriteString(input)
+	output.WriteString(pad)
 
 	return output.String()
 }
@@ -71,12 +64,12 @@ func transposeSquaredText(input string, rows, cols int) string {
 	var output strings.Builder
 
 	for i := 0; i < cols; i++ {
-		for j := 0; j < rows; j++ {
-			output.WriteByte(input[i + j * cols])
+		if i > 0 {
+			output.WriteByte(' ')
 		}
 
-		if i + 1 < cols {
-			output.WriteRune(' ')
+		for j := 0; j < rows; j++ {
+			output.WriteByte(input[i+j*cols])
 		}
 	}
 
