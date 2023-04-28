@@ -46,15 +46,10 @@ func newResult() result {
 	}
 }
 
-func (r result) String() string {
-	var output strings.Builder
-
+func (r result) Write(writer io.Writer) {
 	for _, key := range resultKeys {
-		output.WriteString(" | ")
-		output.WriteString(fmt.Sprintf("%2s", strconv.Itoa(r[key])))
+		fmt.Fprintf(writer, " | %2s", strconv.Itoa(r[key]))
 	}
-
-	return output.String()
 }
 
 func NewTournament() Tournament {
@@ -90,9 +85,7 @@ func (t *Tournament) AddRecord(record []string) {
 	t.updateResult(team2, negativeState(state))
 }
 
-func (t Tournament) String() string {
-	var output strings.Builder
-
+func (t Tournament) Write(writer io.Writer) {
 	sort.Slice(t.Teams, func(i, j int) bool {
 		var score1 int = t.Results[t.Teams[i]]["points"]
 		var score2 int = t.Results[t.Teams[j]]["points"]
@@ -104,15 +97,13 @@ func (t Tournament) String() string {
 		return score1 > score2
 	})
 
-	output.WriteString("Team                           | MP |  W |  D |  L |  P\n")
+	fmt.Fprintf(writer, "%-30s | MP |  W |  D |  L |  P\n", "Team")
 
 	for _, team := range t.Teams {
-		output.WriteString(fmt.Sprintf("%-30s", team))
-		output.WriteString(t.Results[team].String())
-		output.WriteRune('\n')
+		fmt.Fprintf(writer, "%-30s", team)
+		t.Results[team].Write(writer)
+		fmt.Fprintf(writer, "\n")
 	}
-
-	return output.String()
 }
 
 func negativeState(state string) string {
@@ -178,7 +169,7 @@ func Tally(reader io.Reader, writer io.Writer) error {
 		return ErrEmptyInfo
 	}
 
-	writer.Write([]byte(t.String()))
+	t.Write(writer)
 
 	return nil
 }
