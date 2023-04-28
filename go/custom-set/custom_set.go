@@ -1,5 +1,7 @@
 package stringset
 
+import "strings"
+
 // Implement Set as a collection of unique string values.
 //
 // For Set.String, use '{' and '}', output elements as double-quoted strings
@@ -8,51 +10,118 @@ package stringset
 // Format the empty set as {}.
 
 // Define the Set type here.
+type Set map[string]bool
 
 func New() Set {
-	panic("Please implement the New function")
+	return make(Set)
 }
 
 func NewFromSlice(l []string) Set {
-	panic("Please implement the NewFromSlice function")
+	var output Set = make(Set, len(l))
+
+	for _, s := range l {
+		output.Add(s)
+	}
+
+	return output
 }
 
 func (s Set) String() string {
-	panic("Please implement the String function")
+	var output strings.Builder
+	var counter int
+
+	output.WriteRune('{')
+
+	for str := range s {
+		output.WriteRune('"')
+		output.WriteString(str)
+		output.WriteRune('"')
+
+		counter++
+
+		if counter < len(s) {
+			output.WriteString(", ")
+		}
+	}
+
+	output.WriteRune('}')
+
+	return output.String()
 }
 
 func (s Set) IsEmpty() bool {
-	panic("Please implement the IsEmpty function")
+	return len(s) == 0
 }
 
 func (s Set) Has(elem string) bool {
-	panic("Please implement the Has function")
+	return s[elem]
 }
 
 func (s Set) Add(elem string) {
-	panic("Please implement the Add function")
+	s[elem] = true
 }
 
 func Subset(s1, s2 Set) bool {
-	panic("Please implement the Subset function")
+	if len(s1) > len(s2) {
+		return false
+	}
+
+	for elem := range s1 {
+		if exists := s2[elem]; !exists {
+			return false
+		}
+	}
+
+	return true
 }
 
 func Disjoint(s1, s2 Set) bool {
-	panic("Please implement the Disjoint function")
+	return len(Intersection(s1, s2)) == 0
 }
 
 func Equal(s1, s2 Set) bool {
-	panic("Please implement the Equal function")
+	if len(s1) != len(s2) {
+		return false
+	}
+
+	return Subset(s1, s2)
 }
 
 func Intersection(s1, s2 Set) Set {
-	panic("Please implement the Intersection function")
+	var output Set = New()
+
+	for elem := range s1 {
+		if s2[elem] {
+			output.Add(elem)
+		}
+	}
+
+	return output
 }
 
 func Difference(s1, s2 Set) Set {
-	panic("Please implement the Difference function")
+	var output Set = New()
+	var intersection Set = Intersection(s1, s2)
+
+	for elem := range s1 {
+		if !intersection.Has(elem) {
+			output.Add(elem)
+		}
+	}
+
+	return output
 }
 
 func Union(s1, s2 Set) Set {
-	panic("Please implement the Union function")
+	var output Set = New()
+
+	for elem := range s1 {
+		output.Add(elem)
+	}
+
+	for elem := range s2 {
+		output.Add(elem)
+	}
+
+	return output
 }
