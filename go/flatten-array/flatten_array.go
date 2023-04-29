@@ -1,22 +1,24 @@
 package flatten
 
-func flat(flatted []interface{}, nested interface{}) []interface{} {
+func flat(flatted *[]interface{}, nested interface{}) {
 	if nested == nil {
-		return flatted
+		return
 	}
 
 	switch subNested := nested.(type) {
 	case []interface{}:
 		for _, value := range subNested {
-			flatted = flat(flatted, value)
+			flat(flatted, value)
 		}
 	default:
-		flatted = append(flatted, subNested)
+		*flatted = append(*flatted, subNested)
 	}
-
-	return flatted
 }
 
 func Flatten(nested interface{}) []interface{} {
-	return flat([]interface{}{}, nested)
+	var flatted = []interface{}{}
+
+	flat(&flatted, nested)
+
+	return flatted
 }
