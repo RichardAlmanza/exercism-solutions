@@ -5,14 +5,13 @@ func flat(flatted []interface{}, nested interface{}) []interface{} {
 		return flatted
 	}
 
-	subNested, isSlice := nested.([]interface{});
-
-	if isSlice {
+	switch subNested := nested.(type) {
+	case []interface{}:
 		for _, value := range subNested {
 			flatted = flat(flatted, value)
 		}
-	} else {
-		flatted = append(flatted, nested)
+	default:
+		flatted = append(flatted, subNested)
 	}
 
 	return flatted
