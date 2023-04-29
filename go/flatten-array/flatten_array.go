@@ -18,9 +18,5 @@ func flat(flatted []interface{}, nested interface{}) []interface{} {
 }
 
 func Flatten(nested interface{}) []interface{} {
-	var flatted = []interface{}{}
-
-	flatted = flat(flatted, nested)
-
-	return flatted
+	return flat([]interface{}{}, nested)
 }
